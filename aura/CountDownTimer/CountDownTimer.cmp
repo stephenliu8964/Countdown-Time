@@ -1,0 +1,43 @@
+<aura:component implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId" access="global" >
+	<aura:attribute name="record" type="Object" description="The record object to be displayed"/>
+    <aura:attribute name="simpleRecord" type="Object" description="A simplified view record object to be displayed"/>
+    <aura:attribute name="recordError" type="String" description="An error message bound to force:recordData"/>
+    
+    <aura:attribute name="day" type="Integer" default="0"/>
+    <aura:attribute name="hour" type="Integer" default="0"/>
+    <aura:attribute name="minute" type="Integer" default="0"/>
+    <aura:attribute name="second" type="Integer" default="0"/>
+    <aura:attribute name="running" type="Boolean" default="true"/>
+    <aura:attribute name="expired" type="Boolean" default="false"/>
+
+    <force:recordData aura:id="record"
+                      layoutType="FULL"
+                      recordId="{!v.recordId}"
+                      targetError="{!v.recordError}"
+                      targetRecord="{!v.record}"
+                      targetFields="{!v.simpleRecord}"
+                      recordUpdated="{!c.stopStart}"
+                      mode="VIEW"/>
+
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:if isTrue="{!v.expired}">
+        <lightning:card title="Due Date expired" iconName="action:goal">
+            <div class="slds-grid slds-grid--align-space">
+                <div class="slds-col">
+                    <!--0days : 0hours : 0minutes: 0seconds-->
+                </div>
+            </div>
+        </lightning:card>
+    <aura:set attribute="else">
+        <lightning:card title="Days Remaining" iconName="action:defer">
+            <div class="slds-grid slds-grid--align-space">
+                <div class="slds-col daysStyle">
+                    <!--{!v.day}days : {!v.hour}hours : {!v.minute}minutes : {!v.second}seconds-->
+                    <ui:outputText class="slds-text-heading_large" value="{!v.day + ' Days'}"/>
+                </div>
+            </div>
+        </lightning:card>
+    </aura:set>
+    </aura:if>
+</aura:component>
